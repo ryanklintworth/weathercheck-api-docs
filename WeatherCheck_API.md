@@ -12,17 +12,21 @@
 ### Authentication
 - Use your API key in the `Authorization` header.
 - Example (Production):
+
 ```http
 GET /weather/current?location=Fayetteville,AR
 Host: api.weathercheck.com
 Authorization: Bearer <YOUR_API_KEY>
 ```
+
 - Example (Sandbox)
+
 ```http
 GET /weather/current?location=Bentonville,AR
 Host: sandbox.api.weathercheck.com
 Authorization: Bearer TEST-1234-API-KEY
 ```
+
 ### Response Format
 - All responses are returned in JSON
 
@@ -32,7 +36,6 @@ Authorization: Bearer TEST-1234-API-KEY
 - Exceeding limits returns HTTP status `429`
 
 ### Endpoints
-
 ```http
 GET /weather/current
 Purpose: Retrieve current weather data for a given location.
@@ -45,7 +48,6 @@ Purpose: Retrieve current weather data for a given location.
 | units    | Units | string | no | Measurement system: "metric" or "imperial". |
 
 - Example Request
-
 ```http
 GET /weather/current?location=Fayetteville,AR
 Authorization: Bearer <YOUR_API_KEY>
@@ -61,3 +63,9 @@ Authorization: Bearer <YOUR_API_KEY>
     "condition": "Hotter than the surface of the sun..."
 }
 ```
+
+### Field Definitions:
+- `temperature` (float): Current temperature in the requested units.
+- `unit` (string): "F" for Fahrenheir, "C" for Celsius.
+- `humidity` (float): Relative humidity in percent.
+- `condition` (string): Text description of weather (e.g., Sunny, Rainy). 
