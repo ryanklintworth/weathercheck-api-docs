@@ -1,38 +1,63 @@
 # WeatherCheck API Documentation
 
 ## Overview
-> Instant Weather data access. With Weather Check, you are guaranteed instant and easy-to-use weather data. Developers have access to real-time weather information and can integrate forecast data into their application.
+> WeatherCheck API provides real-time weather information and forecasts, allowing developers to retrieve current conditions and integrate forecast data into their applications..
 
 ## Getting Started
+
+### Base URLs
+- **Production:** `https://api.weathercheck.com/v1`
+- **Sandbox / Test:** `https://sandbox.api.weathercheck.com/v1`
+
 ### Authentication
-- **Production** Base URL: `https://api.weathercheck.com/v1`
 - Use your API key in the `Authorization` header.
-- **Example (Production):**
+- Example (Production):
 ```http
-GET /current?location=Fayetteville,AR
+GET /weather/current?location=Fayetteville,AR
 Host: api.weathercheck.com
 Authorization: Bearer <YOUR_API_KEY>
 ```
-
-- **Testing enviroment** Test: `https://sandbox.apli.weathercheck.com/v1`
-- **Example (Test):**
+- Example (Sandbox)
 ```http
-GET /current?location=Bentonville,AR
+GET /weather/current?location=Bentonville,AR
 Host: sandbox.api.weathercheck.com
 Authorization: Bearer TEST-1234-API-KEY
 ```
+### Response Format
+- All responses are returned in JSON
 
-- Response format: JSON
-- Rate limits: e.g., 100 requests/min (429 status code to follow if exceeds 100 requests/min)
+### Rate Limiting
+- Production: 100 requests per min
+- Sandbox: More generous limits for test
+- Exceeding limits returns HTTP status `429`
 
-## Endpoints
+### Endpoints
 
-### /weather/current
-<!-- Method, path, purpose -->
-
-#### Parameters
-<!-- Table -->
-
-#### Example request
 ```http
-<!-- Placeholder for request -->
+GET /weather/current
+Purpose: Retrieve current weather data for a given location.
+```
+
+### Parameters
+| Name     | Label    | Type    | Required | Description |
+|----------|----------|---------|----------|-------------|
+| Location | Location | string  | yes      | Name of the city and state, e.g., "Fayetteville, AR." |
+| units    | Units | string | no | Measurement system: "metric" or "imperial". |
+
+- Example Request
+
+```http
+GET /weather/current?location=Fayetteville,AR
+Authorization: Bearer <YOUR_API_KEY>
+```
+
+- Example Response
+```
+{
+    "location": "Fayetteville, AR",
+    "temperature": 101,
+    "unit": "F",
+    "humidity": 90,
+    "condition": "Hotter than the surface of the sun..."
+}
+```
