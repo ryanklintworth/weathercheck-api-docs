@@ -66,12 +66,41 @@ Authorization: Bearer <YOUR_API_KEY>
 }
 ```
 
-### Field Definitions:
-- `location` (string): Location name (e.g., "Tulsa, OK")
-- `temperature` (float): Current temperature in the requested units.
-- `unit` (string): "F" for Fahrenheir, "C" for Celsius.
-- `humidity` (float): Relative humidity in percent.
-- `condition` (string): Text description of weather (e.g., Sunny, Rainy). 
+### Field Definitions
+
+#### `location` (object)  
+Metadata about the requested location.  
+
+| Name  | Type   | Description |
+|-------|--------|-------------|
+| `name` | string | City or town name (e.g., `"Fayetteville"`) |
+| `region` | string | State, province, or administrative region (e.g., `"Arkansas"`) |
+| `country` | string | ISO country code or name (e.g., `"US"`) |
+
+---
+
+#### `timestamp` (integer)  
+Unix epoch time (seconds since `1970-01-01T00:00:00Z`). Useful for programmatic time comparisons.  
+
+#### `datetime` (string)  
+Human-readable timestamp in ISO 8601 format (UTC), e.g., `"2025-08-21T17:00:00Z"`.  
+
+---
+
+#### `current` (object)  
+Current observed or estimated weather conditions.  
+
+| Name            | Type    | Description |
+|-----------------|---------|-------------|
+| `temperature`   | float   | Air temperature in the requested units |
+| `feels_like`    | float   | Perceived temperature (“heat index” or “wind chill”) in the requested units |
+| `unit`          | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
+| `humidity`      | float   | Relative humidity as a percentage (0–100) |
+| `condition`     | string  | Short text description of current weather (e.g., `"Sunny"`, `"Light Rain"`) |
+| `wind_speed`    | float   | Wind speed in mph or kph (depending on system defaults) |
+| `wind_direction`| string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
+| `uv_index`      | integer | UV exposure index, typically `0–11+` |
+
 
 ### Response Format
 - All responses are returned in JSON
