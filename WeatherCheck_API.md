@@ -11,7 +11,7 @@
 ### Authentication
 - Use your API key in the `Authorization` header.
 
-**Example Current Weather:**
+## **Example Current Weather:**
 ```http
 GET /weather/current?location=Fayetteville,AR
 Host: api.weathercheck.com
