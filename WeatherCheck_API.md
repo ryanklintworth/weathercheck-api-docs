@@ -11,7 +11,7 @@
 ### Authentication
 - Use your API key in the `Authorization` header.
 
-**Example Current Weather:**
+## **Example Current Weather:**
 ```http
 GET /weather/current?location=Fayetteville,AR
 Host: api.weathercheck.com
@@ -214,8 +214,8 @@ Included when `hourly=true`.
 ### Process & Assumptions
 
 - **Normalization**
-  - Converted inconsistent types (“strng?”, “int?”, “bool-ish?”) into standard types: `string`, `integer`, `float`, `boolean`.
-  - Unified required status values (“req’d”, “opt.”, “maybe?”) into `Yes` / `No`.
+  - Converted inconsistent types ("strng?", "int?", "bool-ish?") into standard types: `string`, `integer`, `float`, `boolean`.
+  - Unified required status values ("req’d", "opt.", "maybe?") into `Yes` / `No`.
 
 - **Assumptions**
   - Default `units=imperial` since most U.S.-based weather APIs default to Fahrenheit/mph.
@@ -224,7 +224,7 @@ Included when `hourly=true`.
   - For response objects, only Name, Type, and Description are included. Lable is implicit, and Required is omitted unless a field is optional.
 
 - **Fixes**
-  - Corrected typos (e.g., “measurment” → “Measurement system”).
+  - Corrected typos (e.g., "measurment" → "Measurement", "strng" → "string").
   - Expanded vague descriptions like “City+state, maybe zip?” into a clearer definition while flagging uncertainty.
 
 - **Unclear Items**
