@@ -112,7 +112,7 @@ Purpose: Retrieve forecast weather data for a given location.
 
 ```
 loc | place | strng? | req’d | city/state? zip??  
-units | measurment system | opt. | metric/imperial (def imperial)  
+units | measurment | opt. | metric/imperial (def imperial)  
 lang | language | str | maybe? | english default  
 days | howmanydays | int? | 7 def, max?? | num of days  
 hourly | hrdata | bool-ish? | opt. | include hours?  
