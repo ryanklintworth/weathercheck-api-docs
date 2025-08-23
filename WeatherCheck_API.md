@@ -31,7 +31,15 @@ Purpose: Retrieve current weather data for a given location.
 ```
 
 ### Parameters
+### Raw Parameter Metadata (as provided by engineers)
 
+```
+loc | Location | strng? | req’d | City+state, maybe zip?
+units | measurment | opt. | imperial / metric
+lang | language | str | maybe? | english default
+timestamp | time | int? | bool-ish? | unix?
+```
+### Cleaned Parameter Table
 | Name      | Label    | Type    | Required | Description |
 |-----------|----------|---------|----------|-------------|
 | loc       | Location | string  | Yes      | City and state, e.g., "Fayetteville, AR". |
@@ -56,8 +64,8 @@ Authorization: Bearer <YOUR_API_KEY>
   "timestamp": 1755818773,
   "datetime": "2025-08-21T17:00:00Z",
   "current": {
-    "temperature": 101,
-    "feels_like": 107,
+    "temperature": 95,
+    "feels_like": 101,
     "unit": "F",
     "humidity": 90,
     "condition": "Sunny",
@@ -103,12 +111,36 @@ Current observed or estimated weather conditions.
 | `wind_direction`| string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
 | `uv_index`      | integer | UV exposure index, typically `0–11+` |
 
-## Process notes 
-- Normalized types to `string`, `float`, `integer`, etc.  
-- Assumed `units=imperial` and `lang=en` as defaults since raw data didn’t specify.  
-- Clarified that `timestamp` is optional and defaults to “current time.”  
-- Question for SME: Should `location` accept ZIP/postal codes or only “City, State” format?  
-- Suggestion: Raw data would be clearer if defaults and allowed values were explicitly marked in source spreadsheets.
+---
+
+### Process & Fixes
+
+- **Types normalized:**
+  - “strng?” → `string`
+  - “int?” → `integer`
+  - “bool-ish?” was a mistake; clarified as `integer` for Unix time
+
+- **Required clarified:**
+  - “req’d” kept as `Yes`
+  - “opt.” and “maybe?” normalized to `No`
+
+- **Descriptions fixed:**
+  - “measurment” corrected to “Measurement system”
+  - Expanded “City+state, maybe zip?” to clarify format but flagged uncertainty
+
+- **Defaults assumed:**
+  - `units=imperial`
+  - `lang=en`
+  - `timestamp=current time` when not provided
+
+---
+
+### Unclear / Questions for SME (Subject Matter Expert)
+
+- Does `loc` accept ZIP codes or only `"City, State"`?
+- Should `lang` accept full local codes (`en-US`, `fr-CA`) or only two-letter ISO codes?
+- Can `timestamp` be used for future times, or only historical lookups?
+- Should `units` error if invalid values are passed, or silently default?
 
 ### Rate Limiting
 - Production: 100 requests per min
