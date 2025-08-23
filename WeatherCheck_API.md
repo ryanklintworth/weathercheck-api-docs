@@ -5,28 +5,17 @@
 
 ## Getting Started
 
-### Base URLs
+### Base URL
 - **Production:** `https://api.weathercheck.com/v1`
-- **Sandbox / Test:** `https://sandbox.api.weathercheck.com/v1`
 
 ### Authentication
 - Use your API key in the `Authorization` header.
 
-**Example (Production):**
-
+**Example Current Weather:**
 ```http
 GET /weather/current?location=Fayetteville,AR
 Host: api.weathercheck.com
 Authorization: Bearer <YOUR_API_KEY>
-Purpose: Retrieve current weather data for a given location.
-```
-
-**Example (Sandbox):**
-
-```http
-GET /weather/current?location=Bentonville,AR`
-Host: sandbox.api.weathercheck.com
-Authorization: Bearer TEST-1234-API-KEY
 Purpose: Retrieve current weather data for a given location.
 ```
 
@@ -39,6 +28,7 @@ units | measurment | opt. | imperial / metric
 lang | language | str | maybe? | english default
 timestamp | time | int? | bool-ish? | unix?
 ```
+
 ### Cleaned Parameter Table
 | Name      | Label    | Type    | Required | Description |
 |-----------|----------|---------|----------|-------------|
@@ -79,8 +69,6 @@ Authorization: Bearer <YOUR_API_KEY>
 ### Field Definitions
 
 #### `location` (object)  
-Metadata about the requested location.  
-
 | Name      | Type   | Description |
 |-----------|--------|-------------|
 | `name`    | string | City or town name (e.g., `"Fayetteville"`) |
@@ -98,8 +86,6 @@ Human-readable timestamp in ISO 8601 format (UTC), e.g., `"2025-08-21T17:00:00Z"
 ---
 
 #### `current` (object)  
-Current observed or estimated weather conditions.  
-
 | Name            | Type    | Description |
 |-----------------|---------|-------------|
 | `temperature`   | float   | Air temperature in the requested units |
@@ -112,6 +98,39 @@ Current observed or estimated weather conditions.
 | `uv_index`      | integer | UV exposure index, typically `0–11+` |
 
 ---
+
+## **Example Forecast Weather:**
+```http
+GET /weather/forecast?location=Fayetteville,AR
+Host: api.weathercheck.com
+Authorization: Bearer <YOUR_API_KEY>
+Purpose: Retrieve forecast weather data for a given location.
+```
+
+### Parameters
+### Raw Parameter Metadata (as provided by engineers)
+
+```
+loc | place | strng? | req’d | city/state? zip??  
+units | measurment system | opt. | metric/imperial (def imperial)  
+lang | language | str | maybe? | english default  
+days | howmanydays | int? | 7 def, max?? | num of days  
+hourly | hrdata | bool-ish? | opt. | include hours?  
+```
+
+| Name      | Label       | Type    | Required | Description |
+|-----------|-------------|---------|----------|-------------|
+| loc       | Location    | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
+| units     | Units       | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
+| lang      | Language    | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
+| days      | Forecast Days | integer | No       | Number of days to return (default `7`, max `14`). |
+| hourly    | Hourly Data | boolean | No       | If `true`, includes hourly breakdown. Defaults to `false`. |
+
+### Example Request
+```http
+GET /weather/forecast?loc=Fayetteville,AR&days=3&units=metric&hourly=true
+Authorization: Bearer <YOUR_API_KEY>
+```
 
 ### Process & Assumptions
 
@@ -148,8 +167,3 @@ Current observed or estimated weather conditions.
 - Should `lang` accept full local codes (`en-US`, `fr-CA`) or only two-letter ISO codes?
 - Can `timestamp` be used for future times, or only historical lookups?
 - Should `units` error if invalid values are passed, or silently default?
-
-### Rate Limiting
-- Production: 100 requests per min 
-- Sandbox: More generous limits for test
-- Exceeding limits returns HTTP status `429`
