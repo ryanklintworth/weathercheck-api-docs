@@ -37,13 +37,13 @@ timestamp | time | int? | bool-ish? | unix?
 | lang      | Language | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
 | timestamp | Time     | integer | No       | Unix epoch for historical lookups. If omitted, current time is used. |
 
-- Example Request
+### Example Request
 ```http
 GET /weather/current?location=Fayetteville,AR
 Authorization: Bearer <YOUR_API_KEY>
 ```
 
-- Example Response
+### Example Response
 ```
 {
   "location": {
@@ -118,19 +118,98 @@ days | howmanydays | int? | 7 def, max?? | num of days
 hourly | hrdata | bool-ish? | opt. | include hours?  
 ```
 
-| Name      | Label       | Type    | Required | Description |
-|-----------|-------------|---------|----------|-------------|
-| loc       | Location    | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
-| units     | Units       | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
-| lang      | Language    | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
+| Name      | Label         | Type    | Required | Description |
+|-----------|---------------|---------|----------|-------------|
+| loc       | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
+| units     | Units         | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
+| lang      | Language      | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
 | days      | Forecast Days | integer | No       | Number of days to return (default `7`, max `14`). |
-| hourly    | Hourly Data | boolean | No       | If `true`, includes hourly breakdown. Defaults to `false`. |
+| hourly    | Hourly Data   | boolean | No       | If `true`, includes hourly breakdown. Defaults to `false`. |
 
 ### Example Request
 ```http
 GET /weather/forecast?loc=Fayetteville,AR&days=3&units=metric&hourly=true
 Authorization: Bearer <YOUR_API_KEY>
 ```
+
+### Example Response
+```
+{
+  "location": {
+    "name": "Fayetteville",
+    "region": "Arkansas",
+    "country": "US"
+  },
+  "forecast": [
+    {
+      "date": "2025-08-23",
+      "high_temp": 33.5,
+      "low_temp": 22.1,
+      "unit": "C",
+      "condition": "Partly Cloudy",
+      "precipitation_chance": 40,
+      "humidity": 65,
+      "uv_index": 7,
+      "hourly": [
+        {
+          "time": "2025-08-23T09:00:00Z",
+          "temperature": 28.0,
+          "condition": "Cloudy",
+          "wind_speed": 10.2,
+          "wind_direction": "NE"
+        }
+      ]
+    },
+    {
+      "date": "2025-08-24",
+      "high_temp": 35.2,
+      "low_temp": 23.4,
+      "unit": "C",
+      "condition": "Sunny",
+      "precipitation_chance": 10,
+      "humidity": 55,
+      "uv_index": 8,
+      "hourly": []
+    }
+  ]
+}
+```
+
+### Field Definitions
+
+#### `location` (object)  
+| Name      | Type   | Description |
+|-----------|--------|-------------|
+| `name`    | string | City or town name (e.g., `"Fayetteville"`) |
+| `region`  | string | State, province, or administrative region (e.g., `"Arkansas"`) |
+| `country` | string | ISO country code or name (e.g., `"US"`) |
+
+#### `forecast` (array of objects)  
+Array of daily forecast entries. Each object may optionally include an `hourly` array.
+
+| Name                  | Type    | Description |
+|-----------------------|---------|-------------|
+| `date`                | string  | Forecast date in `YYYY-MM-DD` format |
+| `high_temp`           | float   | Expected daily maximum temperature in requested units |
+| `low_temp`            | float   | Expected daily minimum temperature in requested units |
+| `unit`                | string  | Temperature unit: `"F"` or `"C"` |
+| `condition`           | string  | Text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
+| `precipitation_chance`| integer | Probability of precipitation as a percentage (0–100) |
+| `humidity`            | float   | Average daily relative humidity (%) |
+| `uv_index`            | integer | Daily UV index (0–11+) |
+| `hourly`              | array   | Optional array of hourly forecast objects (see below) |
+
+#### `forecast[].hourly` (array of objects)  
+Included when `hourly=true`.
+
+| Name            | Type    | Description |
+|-----------------|---------|-------------|
+| `time`          | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"` |
+| `temperature`   | float   | Air temperature in requested units |
+| `condition`     | string  | Text description of weather at that hour |
+| `wind_speed`    | float   | Wind speed in mph or kph, depending on `units` |
+| `wind_direction`| string  | Cardinal wind direction (e.g., `"N"`, `"SW"`) |
+
 
 ### Process & Assumptions
 
@@ -142,6 +221,7 @@ Authorization: Bearer <YOUR_API_KEY>
   - Default `units=imperial` since most U.S.-based weather APIs default to Fahrenheit/mph.
   - Default `lang=en` since English was implied in raw data.
   - `timestamp` assumed to default to current system time if not provided.
+  - For response objects, only Name, Type, and Description are included. Lable is implicit, and Required is omitted unless a field is optional.
 
 - **Fixes**
   - Corrected typos (e.g., “measurment” → “Measurement system”).
