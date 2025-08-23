@@ -113,25 +113,32 @@ Current observed or estimated weather conditions.
 
 ---
 
-### Process & Fixes
+### Process & Assumptions
 
-- **Types normalized:**
-  - “strng?” → `string`
-  - “int?” → `integer`
-  - “bool-ish?” was a mistake; clarified as `integer` for Unix time
+- **Normalization**
+  - Converted inconsistent types (“strng?”, “int?”, “bool-ish?”) into standard types: `string`, `integer`, `float`, `boolean`.
+  - Unified required status values (“req’d”, “opt.”, “maybe?”) into `Yes` / `No`.
 
-- **Required clarified:**
-  - “req’d” kept as `Yes`
-  - “opt.” and “maybe?” normalized to `No`
+- **Assumptions**
+  - Default `units=imperial` since most U.S.-based weather APIs default to Fahrenheit/mph.
+  - Default `lang=en` since English was implied in raw data.
+  - `timestamp` assumed to default to current system time if not provided.
 
-- **Descriptions fixed:**
-  - “measurment” corrected to “Measurement system”
-  - Expanded “City+state, maybe zip?” to clarify format but flagged uncertainty
+- **Fixes**
+  - Corrected typos (e.g., “measurment” → “Measurement system”).
+  - Expanded vague descriptions like “City+state, maybe zip?” into a clearer definition while flagging uncertainty.
 
-- **Defaults assumed:**
-  - `units=imperial`
-  - `lang=en`
-  - `timestamp=current time` when not provided
+- **Unclear Items**
+  - Does `loc` accept postal codes or only “City, State”?
+  - Should `lang` accept locale codes (e.g., `en-US`) or only ISO 639-1 codes (e.g., `en`)?
+  - Can `timestamp` accept future dates for forecast alignment or only historical lookups?
+  - What happens if an invalid `units` value is passed? (error vs. silent default)
+
+- **Suggestions for Data Quality**
+  - Explicitly include defaults in the source spreadsheet.
+  - Mark required parameters with a consistent boolean column instead of free-form notes.
+  - Provide a list of allowed values where applicable (`units`, `lang`).
+  - Keep spelling consistent to reduce interpretation overhead.
 
 ---
 
@@ -143,6 +150,6 @@ Current observed or estimated weather conditions.
 - Should `units` error if invalid values are passed, or silently default?
 
 ### Rate Limiting
-- Production: 100 requests per min
+- Production: 100 requests per min 
 - Sandbox: More generous limits for test
 - Exceeding limits returns HTTP status `429`
