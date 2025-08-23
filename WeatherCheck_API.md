@@ -9,14 +9,10 @@
 - **Production:** `https://api.weathercheck.com/v1`
 - **Sandbox / Test:** `https://sandbox.api.weathercheck.com/v1`
 
-### Rate Limiting
-- Production: 100 requests per min
-- Sandbox: More generous limits for test
-- Exceeding limits returns HTTP status `429`
-
 ### Authentication
 - Use your API key in the `Authorization` header.
-- Example (Production):
+
+**Example (Production):**
 
 ```http
 GET /weather/current?location=Fayetteville,AR
@@ -25,10 +21,10 @@ Authorization: Bearer <YOUR_API_KEY>
 Purpose: Retrieve current weather data for a given location.
 ```
 
-- Example (Sandbox)
+**Example (Sandbox):**
 
 ```http
-GET /weather/current?location=Bentonville,AR
+GET /weather/current?location=Bentonville,AR`
 Host: sandbox.api.weathercheck.com
 Authorization: Bearer TEST-1234-API-KEY
 Purpose: Retrieve current weather data for a given location.
@@ -36,12 +32,12 @@ Purpose: Retrieve current weather data for a given location.
 
 ### Parameters
 
-| Name  | Label    | Type    | Required | Description |
-|-------|----------|---------|----------|-------------|
-| loc   | Location | string  | Yes      | City and state, e.g., "Fayetteville, AR". |
-| units | Units    | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
-| lang  | Language | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
-| ts    | Time     | integer | No       | Unix epoch for historical lookups. If omitted, current time is used. |
+| Name      | Label    | Type    | Required | Description |
+|-----------|----------|---------|----------|-------------|
+| loc       | Location | string  | Yes      | City and state, e.g., "Fayetteville, AR". |
+| units     | Units    | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
+| lang      | Language | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
+| timestamp | Time     | integer | No       | Unix epoch for historical lookups. If omitted, current time is used. |
 
 - Example Request
 ```http
@@ -113,3 +109,8 @@ Current observed or estimated weather conditions.
 - Clarified that `timestamp` is optional and defaults to “current time.”  
 - Question for SME: Should `location` accept ZIP/postal codes or only “City, State” format?  
 - Suggestion: Raw data would be clearer if defaults and allowed values were explicitly marked in source spreadsheets.
+
+### Rate Limiting
+- Production: 100 requests per min
+- Sandbox: More generous limits for test
+- Exceeding limits returns HTTP status `429`
