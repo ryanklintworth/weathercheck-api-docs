@@ -1,7 +1,7 @@
 # WeatherCheck API Documentation
 
 ## Overview
-> WeatherCheck API provides real-time weather information and forecasts, allowing developers to retrieve current conditions and integrate forecast data into their applications..
+> WeatherCheck API provides real-time weather information and forecasts, allowing developers to retrieve current conditions and integrate forecast data into their applications.
 
 ## Getting Started
 
@@ -118,6 +118,7 @@ days | howmanydays | int? | 7 def, max?? | num of days
 hourly | hrdata | bool-ish? | opt. | include hours?  
 ```
 
+### Cleaned Parameter Table
 | Name      | Label         | Type    | Required | Description |
 |-----------|---------------|---------|----------|-------------|
 | loc       | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
