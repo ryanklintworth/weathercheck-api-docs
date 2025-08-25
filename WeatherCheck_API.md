@@ -129,7 +129,7 @@ hourly | hrdata | bool-ish? | opt. | include hours?
 
 ### Example Request
 ```http
-GET /weather/forecast?loc=Fayetteville,AR&days=3&units=metric&hourly=true
+GET /weather/forecast?location=Fayetteville,AR&days=3&units=metric&hourly=true
 Authorization: Bearer <YOUR_API_KEY>
 ```
 
@@ -144,9 +144,9 @@ Authorization: Bearer <YOUR_API_KEY>
   "forecast": [
     {
       "date": "2025-08-23",
-      "high_temp": 33.5,
-      "low_temp": 22.1,
-      "unit": "C",
+      "high_temp": 92.3,
+      "low_temp": 71.8,
+      "unit": "F",
       "condition": "Partly Cloudy",
       "precipitation_chance": 40,
       "humidity": 65,
@@ -154,18 +154,18 @@ Authorization: Bearer <YOUR_API_KEY>
       "hourly": [
         {
           "datetime": "2025-08-23T09:00:00Z",
-          "temperature": 28.0,
+          "temperature": 82.4,
           "condition": "Cloudy",
-          "wind_speed": 10.2,
+          "wind_speed": 6.3,
           "wind_direction": "NE"
         }
       ]
     },
     {
       "date": "2025-08-24",
-      "high_temp": 35.2,
-      "low_temp": 23.4,
-      "unit": "C",
+      "high_temp": 95.4,
+      "low_temp": 74.1,
+      "unit": "F",
       "condition": "Sunny",
       "precipitation_chance": 10,
       "humidity": 55,
@@ -190,26 +190,26 @@ Array of daily forecast entries. Each object may optionally include an `hourly` 
 
 | Name                  | Type    | Description |
 |-----------------------|---------|-------------|
-| `date`                | string  | Forecast date in `YYYY-MM-DD` format |
-| `high_temp`           | float   | Expected daily maximum temperature in requested units |
-| `low_temp`            | float   | Expected daily minimum temperature in requested units |
-| `unit`                | string  | Temperature unit: `"F"` or `"C"` |
-| `condition`           | string  | Text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
-| `precipitation_chance`| integer | Probability of precipitation as a percentage (0–100) |
-| `humidity`            | float   | Average daily relative humidity (%) |
-| `uv_index`            | integer | Daily UV index (0–11+) |
-| `hourly`              | array   | Optional array of hourly forecast objects (see below) |
+| `date`                 | string  | Forecast date in `YYYY-MM-DD` format |
+| `high_temp`            | float   | Expected daily maximum temperature in requested units |
+| `low_temp`             | float   | Expected daily minimum temperature in requested units |
+| `unit`                 | string  | Temperature unit: `"F"` or `"C"` |
+| `condition`            | string  | Text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
+| `precipitation_chance` | integer | Probability of precipitation as a percentage (0–100) |
+| `humidity`             | float   | Average daily relative humidity (%) |
+| `uv_index`             | integer | Daily UV index (0–11+) |
+| `hourly`               | array   | Optional array of hourly forecast objects (see below) |
 
 #### `forecast[].hourly` (array of objects)  
 Included when `hourly=true`.
 
 | Name            | Type    | Description |
 |-----------------|---------|-------------|
-| `time`          | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"` |
-| `temperature`   | float   | Air temperature in requested units |
-| `condition`     | string  | Text description of weather at that hour |
-| `wind_speed`    | float   | Wind speed in mph or kph, depending on `units` |
-| `wind_direction`| string  | Cardinal wind direction (e.g., `"N"`, `"SW"`) |
+| `datetime`       | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"` |
+| `temperature`    | float   | Air temperature in requested units |
+| `condition`      | string  | Text description of weather at that hour |
+| `wind_speed`     | float   | Wind speed in mph or kph, depending on `units` |
+| `wind_direction` | string  | Cardinal wind direction (e.g., `"N"`, `"SW"`) |
 
 
 ### Process & Assumptions
