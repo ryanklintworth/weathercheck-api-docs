@@ -119,17 +119,17 @@ hourly | hrdata | bool-ish? | opt. | include hours?
 ```
 
 ### Cleaned Parameter Table
-| Name      | Label         | Type    | Required | Description |
-|-----------|---------------|---------|----------|-------------|
-| location  | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
-| units     | Units         | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
-| lang      | Language      | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
-| days      | Forecast Days | integer | No       | Number of days to return (default `7`, max `14`). |
-| hourly    | Hourly Data   | boolean | No       | If `true`, includes hourly breakdown. Defaults to `false`. |
+| Name     | Label         | Type    | Required | Description |
+|----------|---------------|---------|----------|-------------|
+| location | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
+| units    | Units         | string  | No       | Measurement system: `imperial` or `metric`. Defaults to `imperial`. |
+| lang     | Language      | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
+| days     | Forecast Days | integer | No       | Number of days to return (default `7`, max `14`). |
+| hourly   | Hourly Data   | boolean | No       | If `true`, includes hourly breakdown. Defaults to `false`. |
 
 ### Example Request
 ```http
-GET /weather/forecast?location=Fayetteville,AR&days=3&units=metric&hourly=true
+GET /weather/forecast?location=Fayetteville,AR&days=3&units=imperial&hourly=true
 Authorization: Bearer <YOUR_API_KEY>
 ```
 
@@ -188,13 +188,13 @@ Authorization: Bearer <YOUR_API_KEY>
 #### `forecast` (array of objects)  
 Array of daily forecast entries. Each object may optionally include an `hourly` array.
 
-| Name                  | Type    | Description |
-|-----------------------|---------|-------------|
-| `date`                 | string  | Forecast date in `YYYY-MM-DD` format |
+| Name                   | Type    | Description |
+|------------------------|---------|-------------|
+| `date`                 | string  | Forecast date in `YYYY-MM-DD` format. Only a date string is returned (no Inix timestamp) |
 | `high_temp`            | float   | Expected daily maximum temperature in requested units |
 | `low_temp`             | float   | Expected daily minimum temperature in requested units |
-| `unit`                 | string  | Temperature unit: `"F"` or `"C"` |
-| `condition`            | string  | Text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
+| `unit`                 | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
+| `condition`            | string  | Short text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
 | `precipitation_chance` | integer | Probability of precipitation as a percentage (0–100) |
 | `humidity`             | float   | Average daily relative humidity (%) |
 | `uv_index`             | integer | Daily UV index (0–11+) |
@@ -203,9 +203,9 @@ Array of daily forecast entries. Each object may optionally include an `hourly` 
 #### `forecast[].hourly` (array of objects)  
 Included when `hourly=true`.
 
-| Name            | Type    | Description |
-|-----------------|---------|-------------|
-| `datetime`       | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"` |
+| Name             | Type    | Description |
+|------------------|---------|-------------|
+| `datetime`       | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"`. Note that forecasts uses `datetime` |
 | `temperature`    | float   | Air temperature in requested units |
 | `condition`      | string  | Text description of weather at that hour |
 | `wind_speed`     | float   | Wind speed in mph or kph, depending on `units` |
