@@ -32,7 +32,7 @@ timestamp | time | int? | bool-ish? | unix?
 ### Cleaned Parameter Table
 | Name      | Label    | Type    | Required | Description |
 |-----------|----------|---------|----------|-------------|
-| loc       | Location | string  | Yes      | City and state, e.g., "Fayetteville, AR". |
+| location  | Location | string  | Yes      | City and state, e.g., "Fayetteville, AR". |
 | units     | Units    | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
 | lang      | Language | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
 | timestamp | Time     | integer | No       | Unix epoch for historical lookups. If omitted, current time is used. |
@@ -121,7 +121,7 @@ hourly | hrdata | bool-ish? | opt. | include hours?
 ### Cleaned Parameter Table
 | Name      | Label         | Type    | Required | Description |
 |-----------|---------------|---------|----------|-------------|
-| loc       | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
+| location  | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
 | units     | Units         | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
 | lang      | Language      | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
 | days      | Forecast Days | integer | No       | Number of days to return (default `7`, max `14`). |
@@ -153,7 +153,7 @@ Authorization: Bearer <YOUR_API_KEY>
       "uv_index": 7,
       "hourly": [
         {
-          "time": "2025-08-23T09:00:00Z",
+          "datetime": "2025-08-23T09:00:00Z",
           "temperature": 28.0,
           "condition": "Cloudy",
           "wind_speed": 10.2,
