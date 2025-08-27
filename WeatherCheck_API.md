@@ -291,3 +291,19 @@ If you exceed the rate limit, the API reponds with:
 - Should `lang` accept full local codes (`en-US`, `fr-CA`) or only two-letter ISO codes?
 - Can `timestamp` be used for future times, or only historical lookups?
 - Should `units` error if invalid values are passed, or silently default?
+
+## Bonus: Best Practices & Recommendations
+### Best Practices for Developers
+- Cache responses: Avoid hitting rate limits and improve performance by caching current weather data for at least 60 seconds.
+- Use forecast endpoints for planning: Do not call `/current` repeatedly to simulate forecasts. Use `/forecast` instead.
+- Gracefully handle errors: Always check the `error.code` field and build retries with exponential backoff if appropriate.
+
+### Recommendations for API Evolution
+- OpenAPI/Swagger schema: Publish a machine-readable schema (`openapi.yaml`) to auto-generate SDKs, client stubs, and test coverage.
+- Standardized metadata: Add fields like `units` and `lang` to the response root for consistency.
+- Localization: Consider support for full locale codes (e.g., `en-US`, `fr-CA`) instead of just `ISO 639-1`.
+Webhooks (future): Push severe weather alerts via webhook instead of polling.
+Rate limiting transparency: Expose both per-minute and per-day quotas in headers.
+
+### Bonus Hit
+- Modeled after industry standards like `https://openweathermap.org/current` and `https://developer.apple.com/documentation/weatherkitrestapi`
