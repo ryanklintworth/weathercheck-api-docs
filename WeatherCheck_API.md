@@ -190,7 +190,7 @@ Array of daily forecast entries. Each object may optionally include an `hourly` 
 
 | Name                   | Type    | Description |
 |------------------------|---------|-------------|
-| `date`                 | string  | Forecast date in `YYYY-MM-DD` format. Only a date string is returned (no Inix timestamp) |
+| `date`                 | string  | Forecast date in `YYYY-MM-DD` format. Only a date string is returned (no Unix timestamp) |
 | `high_temp`            | float   | Expected daily maximum temperature in requested units |
 | `low_temp`             | float   | Expected daily minimum temperature in requested units |
 | `unit`                 | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
@@ -243,7 +243,7 @@ Included when `hourly=true`.
   - Default `units=imperial` since most U.S.-based weather APIs default to Fahrenheit/mph.
   - Default `lang=en` since English was implied in raw data.
   - `timestamp` assumed to default to current system time if not provided.
-  - For response objects, only Name, Type, and Description are included. Lable is implicit, and Required is omitted unless a field is optional.
+  - For response objects, only Name, Type, and Description are included. Label is implicit, and Required is omitted unless a field is optional.
 
 - **Fixes**
   - Corrected typos (e.g., "measurment" → "Measurement", "strng" → "string").
