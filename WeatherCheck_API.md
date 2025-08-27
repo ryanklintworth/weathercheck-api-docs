@@ -6,7 +6,7 @@
 ## Getting Started
 
 ### Base URL
-- **Production:** `https://api.weathercheck.com/v1`
+- `https://api.weathercheck.com/v1`
 
 ### Authentication
 - Use your API key in the `Authorization` header.
@@ -34,7 +34,7 @@ timestamp | time | int? | bool-ish? | unix?
 |-----------|----------|---------|----------|-------------|
 | location  | Location | string  | Yes      | City and state, e.g., "Fayetteville, AR". |
 | units     | Units    | string  | No       | Measurement system: `metric` or `imperial`. Defaults to `imperial`. |
-| lang      | Language | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
+| lang      | Language | string  | No       | Language code for condition descriptions. Accepts two-letter ISO 639-1 codes (e.g., `en`, `es`, `fr`). Defaults to `en`. Locale variants (e.g., `fr-CA`) are not supported. |
 | timestamp | Time     | integer | No       | Unix epoch for historical lookups. If omitted, current time is used. |
 
 ### Example Request
@@ -123,7 +123,7 @@ hourly | hrdata | bool-ish? | opt. | include hours?
 |----------|---------------|---------|----------|-------------|
 | location | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
 | units    | Units         | string  | No       | Measurement system: `imperial` or `metric`. Defaults to `imperial`. |
-| lang     | Language      | string  | No       | Language code for condition descriptions (e.g., `en`, `es`, `fr`). Defaults to `en`. |
+| lang     | Language      | string  | No       | Language code for condition descriptions. Accepts two-letter ISO 639-1 codes (e.g., `en`, `es`, `fr`). Defaults to `en`. Locale variants (e.g., `fr-CA`) are not supported. |
 | days     | Forecast Days | integer | No       | Number of days to return (default `7`, max `14`). |
 | hourly   | Hourly Data   | boolean | No       | If `true`, includes hourly breakdown. Defaults to `false`. |
 
@@ -190,7 +190,7 @@ Array of daily forecast entries. Each object may optionally include an `hourly` 
 
 | Name                   | Type    | Description |
 |------------------------|---------|-------------|
-| `date`                 | string  | Forecast date in `YYYY-MM-DD` format. Only a date string is returned (no Unix timestamp) |
+| `date`                 | string  | Forecast date in `YYYY-MM-DD` format. |
 | `high_temp`            | float   | Expected daily maximum temperature in requested units |
 | `low_temp`             | float   | Expected daily minimum temperature in requested units |
 | `unit`                 | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
