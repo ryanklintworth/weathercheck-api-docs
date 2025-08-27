@@ -240,11 +240,29 @@ Included when `hourly=true`.
 
 ### Endpoint-specific error notes
 - `/weather/current`
-    - Returns `400` if the `location` parameter is missing
+    - Returns `400` if the `location` parameter is missing.
+    - Returns `404` if the requested location is not found.
 - `/weather/forecast`
-    - Returns `400` if the `days` parameter exceeds the maximum allowed. (e.g., >`14`)
+    - Returns `400` if the `days` parameter exceeds the maximum allowed. (e.g., >`14`).
+    - Returns `404` if the requested location is not found.
 
-### Process & Assumptions
+## Rate Limiting
+| Limit Type          | Value    | Description                             |
+| ------------------- | -------- | --------------------------------------- |
+| Requests per minute | `60`     | Max 60 requests per API key per minute  |
+| Requests per day    | `10,000` | Max 10,000 requests per API key per day |
+
+If you exceed the rate limit, the API reponds with:
+```json
+{
+  "error": {
+    "code": 429,
+    "message": "Rate limit exceeded. Please wait and try again."
+  }
+}
+```
+
+## Process & Assumptions
 
 - **Normalization**
   - Converted inconsistent types ("strng?", "int?", "bool-ish?") into standard types: `string`, `integer`, `float`, `boolean`.
