@@ -272,17 +272,10 @@ If you exceed the rate limit, the API reponds with:
   - Default `units=imperial` since most U.S.-based weather APIs default to Fahrenheit/mph.
   - Default `lang=en` since English was implied in raw data.
   - `timestamp` assumed to default to current system time if not provided.
-  - For response objects, only Name, Type, and Description are included. Label is implicit, and Required is omitted unless a field is optional.
 
 - **Fixes**
   - Corrected typos (e.g., "measurment" → "Measurement", "strng" → "string").
   - Expanded vague descriptions like “City+state, maybe zip?” into a clearer definition while flagging uncertainty.
-
-- **Unclear Items**
-  - Does `loc` accept postal codes or only “City, State”?
-  - Should `lang` accept locale codes (e.g., `en-US`) or only ISO 639-1 codes (e.g., `en`)?
-  - Can `timestamp` accept future dates for forecast alignment or only historical lookups?
-  - What happens if an invalid `units` value is passed? (error vs. silent default)
 
 - **Suggestions for Data Quality**
   - Explicitly include defaults in the source spreadsheet.
