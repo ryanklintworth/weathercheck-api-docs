@@ -69,11 +69,11 @@ Authorization: Bearer <YOUR_API_KEY>
 ### Field Definitions
 
 #### `location` (object)  
-| Name      | Type   | Description |
-|-----------|--------|-------------|
-| `name`    | string | City or town name (e.g., `"Fayetteville"`) |
-| `region`  | string | State, province, or administrative region (e.g., `"Arkansas"`) |
-| `country` | string | ISO country code or name (e.g., `"US"`) |
+| Name               | Type   | Description |
+|--------------------|--------|-------------|
+| `location.name`    | string | City or town name (e.g., `"Fayetteville"`) |
+| `location.region`  | string | State, province, or administrative region (e.g., `"Arkansas"`) |
+| `location.country` | string | ISO country code or name (e.g., `"US"`) |
 
 ---
 
@@ -86,16 +86,16 @@ Human-readable timestamp in ISO 8601 format (UTC), e.g., `"2025-08-21T17:00:00Z"
 ---
 
 #### `current` (object)  
-| Name            | Type    | Description |
-|-----------------|---------|-------------|
-| `temperature`   | float   | Air temperature in the requested units |
-| `feels_like`    | float   | Perceived temperature (“heat index” or “wind chill”) in the requested units |
-| `unit`          | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
-| `humidity`      | float   | Relative humidity as a percentage (0–100) |
-| `condition`     | string  | Short text description of current weather (e.g., `"Sunny"`, `"Light Rain"`) |
-| `wind_speed`    | float   | Wind speed in mph or kph (depending on system defaults) |
-| `wind_direction`| string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
-| `uv_index`      | integer | UV exposure index `0–11+` |
+| Name                    | Type    | Description |
+|-------------------------|---------|-------------|
+| `current.temperature`   | float   | Air temperature in the requested units |
+| `current.feels_like`    | float   | Perceived temperature (“heat index” or “wind chill”) in the requested units |
+| `current.unit`          | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
+| `current.humidity`      | float   | Relative humidity as a percentage (0–100) |
+| `current.condition`     | string  | Short text description of current weather (e.g., `"Sunny"`, `"Light Rain"`) |
+| `current.wind_speed`    | float   | Wind speed in mph or kph |
+| `current.wind_direction`| string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
+| `current.uv_index`      | integer | UV exposure index `0–11+` |
 
 ---
 
@@ -124,7 +124,7 @@ hourly | hrdata | bool-ish? | opt. | include hours?
 | location | Location      | string  | Yes      | City and state (e.g., `"Fayetteville, AR"`). May also support ZIP/postal codes. |
 | units    | Units         | string  | No       | Measurement system: `imperial` or `metric`. Defaults to `imperial`. |
 | lang     | Language      | string  | No       | Language code for condition descriptions. Accepts two-letter ISO 639-1 codes (e.g., `en`, `es`, `fr`). Defaults to `en`. Locale variants (e.g., `fr-CA`) are not supported. |
-| days     | Forecast Days | integer | No       | Number of days to return (default `7`, max `14`). |
+| days     | Forecast Days | integer | No       | Number of days to return. Default `7`, max `14`. Values above `14` return an error.`. |
 | hourly   | Hourly Data   | boolean | No       | If `true`, includes hourly breakdown. Defaults to `false`. |
 
 ### Example Request
@@ -179,37 +179,37 @@ Authorization: Bearer <YOUR_API_KEY>
 ### Field Definitions
 
 #### `location` (object)  
-| Name      | Type   | Description |
-|-----------|--------|-------------|
-| `name`    | string | City or town name (e.g., `"Fayetteville"`) |
-| `region`  | string | State, province, or administrative region (e.g., `"Arkansas"`) |
-| `country` | string | ISO country code or name (e.g., `"US"`) |
+| Name               | Type   | Description |
+|--------------------|--------|-------------|
+| `location.name`    | string | City or town name (e.g., `"Fayetteville"`) |
+| `location.region`  | string | State, province, or administrative region (e.g., `"Arkansas"`) |
+| `location.country` | string | ISO country code or name (e.g., `"US"`) |
 
 #### `forecast` (array of objects)  
 Array of daily forecast entries. Each object may optionally include an `hourly` array.
 
-| Name                   | Type    | Description |
-|------------------------|---------|-------------|
-| `date`                 | string  | Forecast date in `YYYY-MM-DD` format. |
-| `high_temp`            | float   | Expected daily maximum temperature in requested units |
-| `low_temp`             | float   | Expected daily minimum temperature in requested units |
-| `unit`                 | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
-| `condition`            | string  | Short text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
-| `precipitation_chance` | integer | Probability of precipitation as a percentage (0–100) |
-| `humidity`             | float   | Relative humidity as a percentage (0-100) |
-| `uv_index`             | integer | UV exposure index (0–11+) |
-| `hourly`               | array   | Optional array of hourly forecast objects (see below) |
+| Name                            | Type    | Description |
+|---------------------------------|---------|-------------|
+| `forecast.date`                 | string  | Forecast date in `YYYY-MM-DD` format. |
+| `forecast.high_temp`            | float   | Expected daily maximum temperature in requested units |
+| `forecast.low_temp`             | float   | Expected daily minimum temperature in requested units |
+| `forecast.unit`                 | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
+| `forecast.condition`            | string  | Short text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
+| `forecast.precipitation_chance` | integer | Probability of precipitation as a percentage (0–100) |
+| `forecast.humidity`             | float   | Relative humidity as a percentage (0-100) |
+| `forecast.uv_index`             | integer | UV exposure index (0–11+) |
+| `forecast.hourly`               | array   | Optional array of hourly forecast objects (see below) |
 
 #### `forecast[].hourly` (array of objects)  
 Included when `hourly=true`.
 
-| Name             | Type    | Description |
-|------------------|---------|-------------|
-| `datetime`       | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"`. Note that `"forecast.hourly"` uses `datetime` |
-| `temperature`    | float   | Air temperature in requested units |
-| `condition`      | string  | Text description of weather at that hour |
-| `wind_speed`     | float   | Wind speed in mph or kph (depending on system defaults) |
-| `wind_direction` | string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
+| Name                             | Type    | Description |
+|----------------------------------|---------|-------------|
+| `forecast.hourly.datetime`       | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"`. |
+| `forecast.hourly.temperature`    | float   | Air temperature in requested units |
+| `forecast.hourly.condition`      | string  | Text description of weather at that hour |
+| `forecast.hourly.wind_speed`     | float   | Wind speed in mph or kph (depending on system defaults) |
+| `forecast.hourly.wind_direction` | string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
 
 ## Error handling
 ### Standard Error Format
@@ -225,7 +225,18 @@ Included when `hourly=true`.
 | Field     | Type    | Description |
 |-----------|---------|-------------|
 | `code`    | integer | HTTP status code |
-| `message` | string  | Human-readable error description
+| `message` | string  | Human-readable error description |
+
+### Common Error Codes
+| Code  | Meaning               | When it Happens                                                 |
+|-------|-----------------------|-----------------------------------------------------------------|
+| `400` | Bad Request           | Invalid parameter (e.g., `units=stone` or `days > 14`)          |
+| `401` | Unauthorized          | Missing or invalid API key                                      |
+| `403` | Forbidden             | API key valid, but not allowed to access the requested endpoint |
+| `404` | Not Found             | Location not found, or endpoint does not exist                  |
+| `429` | Too Many Requests     | Rate limit exceeded                                             |
+| `500` | Internal Server Error | Something went wrong on WeatherCheck’s side                     |
+
 
 ### Endpoint-specific error notes
 - `/weather/current`
