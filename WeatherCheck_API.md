@@ -11,7 +11,7 @@
 ### Authentication
 - Use your API key in the `Authorization` header.
 
-## **Example Current Weather:**
+## Example Current Weather:
 ```http
 GET /weather/current?location=Fayetteville,AR
 Host: api.weathercheck.com
@@ -95,11 +95,11 @@ Human-readable timestamp in ISO 8601 format (UTC), e.g., `"2025-08-21T17:00:00Z"
 | `condition`     | string  | Short text description of current weather (e.g., `"Sunny"`, `"Light Rain"`) |
 | `wind_speed`    | float   | Wind speed in mph or kph (depending on system defaults) |
 | `wind_direction`| string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
-| `uv_index`      | integer | UV exposure index, typically `0–11+` |
+| `uv_index`      | integer | UV exposure index `0–11+` |
 
 ---
 
-## **Example Forecast Weather:**
+## Example Forecast Weather:
 ```http
 GET /weather/forecast?location=Fayetteville,AR
 Host: api.weathercheck.com
@@ -196,8 +196,8 @@ Array of daily forecast entries. Each object may optionally include an `hourly` 
 | `unit`                 | string  | Temperature unit: `"F"` for Fahrenheit or `"C"` for Celsius |
 | `condition`            | string  | Short text description of expected weather (e.g., `"Sunny"`, `"Rain"`) |
 | `precipitation_chance` | integer | Probability of precipitation as a percentage (0–100) |
-| `humidity`             | float   | Average daily relative humidity (%) |
-| `uv_index`             | integer | Daily UV index (0–11+) |
+| `humidity`             | float   | Relative humidity as a percentage (0-100) |
+| `uv_index`             | integer | UV exposure index (0–11+) |
 | `hourly`               | array   | Optional array of hourly forecast objects (see below) |
 
 #### `forecast[].hourly` (array of objects)  
@@ -205,12 +205,33 @@ Included when `hourly=true`.
 
 | Name             | Type    | Description |
 |------------------|---------|-------------|
-| `datetime`       | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"`. Note that forecasts uses `datetime` |
+| `datetime`       | string  | ISO 8601 timestamp (UTC), e.g., `"2025-08-23T09:00:00Z"`. Note that `"forecast.hourly"` uses `datetime` |
 | `temperature`    | float   | Air temperature in requested units |
 | `condition`      | string  | Text description of weather at that hour |
-| `wind_speed`     | float   | Wind speed in mph or kph, depending on `units` |
-| `wind_direction` | string  | Cardinal wind direction (e.g., `"N"`, `"SW"`) |
+| `wind_speed`     | float   | Wind speed in mph or kph (depending on system defaults) |
+| `wind_direction` | string  | Cardinal direction of wind (e.g., `"N"`, `"SW"`) |
 
+## Error handling
+### Standard Error Format
+```json
+{
+    "error": {
+        "code": 400,
+        "message": "Invalid parameter: units must be 'metric' or 'imperial'."
+    }
+}
+```
+
+| Field     | Type    | Description |
+|-----------|---------|-------------|
+| `code`    | integer | HTTP status code |
+| `message` | string  | Human-readable error description
+
+### Endpoint-specific error notes
+- `/weather/current`
+    - Returns `400` if the `location` parameter is missing
+- `/weather/forecast`
+    - Returns `400` if the `days` parameter exceeds the maximum allowed. (e.g., >`14`)
 
 ### Process & Assumptions
 
