@@ -129,7 +129,7 @@ hourly | hrdata | bool-ish? | opt. | include hours?
 
 ### Example Request
 ```http
-GET /weather/forecast?location=Fayetteville,AR&days=3&units=imperial&hourly=true
+GET /weather/forecast?location=Fayetteville,AR&days=2&units=imperial&hourly=true
 Authorization: Bearer <YOUR_API_KEY>
 ```
 
