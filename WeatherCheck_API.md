@@ -170,7 +170,15 @@ Authorization: Bearer <YOUR_API_KEY>
       "precipitation_chance": 10,
       "humidity": 55,
       "uv_index": 8,
-      "hourly": []
+      "hourly": [
+        {
+          "datetime": "2025-08-24T09:00:00Z",
+          "temperature": 81.1,
+          "condition": "Sunny",
+          "wind_speed": 2.3,
+          "wind_direction": "NE"
+        }
+      ]
     }
   ]
 }
