@@ -1,0 +1,278 @@
+openapi: "3.1.0"
+info:
+  title: WeatherCheck API
+  version: "1.0.0"
+  description: >
+    Real-time conditions and forecast data.
+servers:
+  - url: https://api.weathercheck.com/v1
+security:
+  - bearerAuth: []
+paths:
+  /weather/current:
+    get:
+      summary: Get current weather
+      description: Retrieve current conditions for a location.
+      operationId: getCurrentWeather
+      parameters:
+        - $ref: '#/components/parameters/location'
+        - $ref: '#/components/parameters/units'
+        - $ref: '#/components/parameters/lang'
+        - $ref: '#/components/parameters/timestamp'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentWeatherResponse'
+              examples:
+                example:
+                  value:
+                    location: { name: Fayetteville, region: Arkansas, country: US }
+                    timestamp: 1755818773
+                    datetime: "2025-08-21T17:00:00Z"
+                    current:
+                      temperature: 95
+                      feels_like: 101
+                      unit: F
+                      humidity: 90
+                      condition: Sunny
+                      wind_speed: 12.5
+                      wind_direction: SW
+                      uv_index: 8
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /weather/forecast:
+    get:
+      summary: Get forecast
+      description: Daily forecast with optional hourly breakdown.
+      operationId: getForecast
+      parameters:
+        - $ref: '#/components/parameters/location'
+        - $ref: '#/components/parameters/units'
+        - $ref: '#/components/parameters/lang'
+        - $ref: '#/components/parameters/days'
+        - $ref: '#/components/parameters/hourly'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForecastResponse'
+              examples:
+                example:
+                  value:
+                    location: { name: Fayetteville, region: Arkansas, country: US }
+                    forecast:
+                      - date: "2025-08-23"
+                        high_temp: 92.3
+                        low_temp: 71.8
+                        unit: F
+                        condition: Partly Cloudy
+                        precipitation_chance: 40
+                        humidity: 65
+                        uv_index: 7
+                        hourly:
+                          - datetime: "2025-08-23T09:00:00Z"
+                            temperature: 82.4
+                            condition: Cloudy
+                            wind_speed: 6.3
+                            wind_direction: NE
+                      - date: "2025-08-24"
+                        high_temp: 95.4
+                        low_temp: 74.1
+                        unit: F
+                        condition: Sunny
+                        precipitation_chance: 10
+                        humidity: 55
+                        uv_index: 8
+                        hourly:
+                          - datetime: "2025-08-24T09:00:00Z"
+                            temperature: 81.1
+                            condition: Sunny
+                            wind_speed: 2.3
+                            wind_direction: NE
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    location:
+      name: location
+      in: query
+      required: true
+      description: City and state (e.g., "Fayetteville, AR"). May also support ZIP/postal codes.
+      schema: { type: string }
+    units:
+      name: units
+      in: query
+      required: false
+      description: Measurement system. Defaults to `imperial`.
+      schema:
+        type: string
+        enum: [imperial, metric]
+        default: imperial
+    lang:
+      name: lang
+      in: query
+      required: false
+      description: Two-letter ISO 639-1 language code (e.g., `en`, `es`). Defaults to `en`. Locale variants not supported.
+      schema:
+        type: string
+        pattern: '^[a-z]{2}$'
+        default: en
+    timestamp:
+      name: timestamp
+      in: query
+      required: false
+      description: Unix epoch seconds for historical lookups. If omitted, current time is used.
+      schema:
+        type: integer
+        minimum: 0
+    days:
+      name: days
+      in: query
+      required: false
+      description: Number of days to return. Default 7. Max 14.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 14
+        default: 7
+    hourly:
+      name: hourly
+      in: query
+      required: false
+      description: If true, include hourly breakdown.
+      schema: { type: boolean, default: false }
+
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+          example: { error: { code: 400, message: "Invalid parameter" } }
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+          example: { error: { code: 401, message: "Missing or invalid API key" } }
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+          example: { error: { code: 404, message: "Location not found" } }
+    TooManyRequests:
+      description: Too Many Requests
+      headers:
+        X-RateLimit-Limit:
+          schema: { type: integer }
+          description: Per-minute limit
+        X-RateLimit-Remaining:
+          schema: { type: integer }
+          description: Remaining in window
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+          example: { error: { code: 429, message: "Rate limit exceeded. Please wait and try again." } }
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+
+  schemas:
+    Location:
+      type: object
+      properties:
+        name: { type: string, examples: [Fayetteville] }
+        region: { type: string, examples: [Arkansas] }
+        country: { type: string, examples: [US] }
+      required: [name, region, country]
+
+    CurrentBlock:
+      type: object
+      properties:
+        temperature: { type: number }
+        feels_like: { type: number }
+        unit:
+          type: string
+          enum: [F, C]
+        humidity: { type: number, minimum: 0, maximum: 100 }
+        condition: { type: string }
+        wind_speed: { type: number }
+        wind_direction: { type: string, examples: [SW] }
+        uv_index: { type: integer, minimum: 0 }
+      required: [temperature, unit, condition]
+
+    CurrentWeatherResponse:
+      type: object
+      properties:
+        location: { $ref: '#/components/schemas/Location' }
+        timestamp: { type: integer, examples: [1755818773] }
+        datetime: { type: string, format: date-time }
+        current: { $ref: '#/components/schemas/CurrentBlock' }
+      required: [location, current]
+
+    HourlyEntry:
+      type: object
+      properties:
+        datetime: { type: string, format: date-time }
+        temperature: { type: number }
+        condition: { type: string }
+        wind_speed: { type: number }
+        wind_direction: { type: string }
+      required: [datetime, temperature, condition]
+
+    ForecastDay:
+      type: object
+      properties:
+        date: { type: string, pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' }
+        high_temp: { type: number }
+        low_temp: { type: number }
+        unit: { type: string, enum: [F, C] }
+        condition: { type: string }
+        precipitation_chance: { type: integer, minimum: 0, maximum: 100 }
+        humidity: { type: number, minimum: 0, maximum: 100 }
+        uv_index: { type: integer, minimum: 0 }
+        hourly:
+          type: array
+          items: { $ref: '#/components/schemas/HourlyEntry' }
+      required: [date, high_temp, low_temp, unit, condition]
+
+    ForecastResponse:
+      type: object
+      properties:
+        location: { $ref: '#/components/schemas/Location' }
+        forecast:
+          type: array
+          items: { $ref: '#/components/schemas/ForecastDay' }
+      required: [location, forecast]
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: integer }
+            message: { type: string }
+          required: [code, message]
+      required: [error]
